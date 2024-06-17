@@ -18,6 +18,11 @@ const config = {
       },
     },
     extend: {
+      spacing: {
+        navbar: '4rem',
+        main: 'calc(100dvh - 4rem)',
+        content: '1080px',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

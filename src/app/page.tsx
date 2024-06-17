@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 
 export default function Home() {
   return (
-    <main className="">
+    <>
       <ColorPalette />
 
       <div className="flex w-96 max-w-full gap-2 m-auto">
@@ -15,6 +15,6 @@ export default function Home() {
           <Icon name="magnify" />
         </Button>
       </div>
-    </main>
+    </>
   );
 }
