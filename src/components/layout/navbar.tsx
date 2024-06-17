@@ -1,3 +1,5 @@
+import { Logo } from './logo';
+
 export type NavbarProps = React.PropsWithChildren<{}>;
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -13,5 +15,5 @@ export const Navbar: React.FC<NavbarProps> = ({
 };
 
 const DefaultNavbarContent: React.FC = () => {
-  return <>EthTracker</>;
+  return <Logo />;
 };
