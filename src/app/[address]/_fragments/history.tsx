@@ -1,6 +1,9 @@
+import { Icon } from '@/components/icon';
+import { Badge } from '@/components/ui/badge';
 import { Collapsible } from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { formatAddress } from '@/lib/utils/format';
+import { cva } from 'class-variance-authority';
 
 export type HistoryFragmentProps = {
   history: Account.HistoryLog[];
@@ -54,15 +57,30 @@ type TransferProps = {
 };
 
 const Transfer: React.FC<TransferProps> = ({ transfer }) => {
+  const directionColor = (
+    {
+      in: 'success',
+      out: 'destructive',
+      self: 'primary',
+    } as const
+  )[transfer.direction];
+
   return (
-    <div className="grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] [&:not(:last-child)]:border-b [&:not(:last-child)]:pb-2">
+    <div className="grid grid-cols-[auto_2fr_auto_1fr_1fr_1fr] [&:not(:last-child)]:border-b [&:not(:last-child)]:pb-2">
       <img
         src={transfer.imageUrl}
         alt={transfer.name}
         className="w-16 h-16 rounded"
       />
-      <TransferCell>{transfer.name}</TransferCell>
-      <TransferCell>{transfer.direction}</TransferCell>
+      <TransferCell className="font-bold">{transfer.name}</TransferCell>
+
+      <TransferCell>
+        <Badge color={directionColor} className="text-sm">
+          <Icon name={`tx-${transfer.direction}`} />
+          {transfer.direction}
+        </Badge>
+      </TransferCell>
+
       <TransferCell>{transfer.quantity}</TransferCell>
       <TransferCell>{transfer.value || '-'}</TransferCell>
       <TransferCell>{transfer.price || '-'}</TransferCell>
@@ -70,6 +88,12 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
   );
 };
 
-const TransferCell: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  return <span className="flex items-center justify-center">{children}</span>;
+type TransferCellProps = React.HTMLAttributes<HTMLSpanElement>;
+
+const TransferCell: React.FC<TransferCellProps> = ({ children, className }) => {
+  return (
+    <span className={transferCellVariants({ className })}>{children}</span>
+  );
 };
+
+const transferCellVariants = cva('flex items-center justify-center');
