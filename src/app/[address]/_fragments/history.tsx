@@ -39,7 +39,7 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
         <span>{log.timestamp}</span>
       </div>
 
-      {log.transfers.length > 0 && (
+      {log.transfers.length > 0 ? (
         <Collapsible trigger="Transfers">
           <div className="hidden md:grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] border-b py-2 px-4 gap-4">
             <div />
@@ -60,6 +60,10 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
             ))}
           </div>
         </Collapsible>
+      ) : (
+        <span className="text-foreground/60  italic text-center font-light">
+          There are no transfers for this transaction
+        </span>
       )}
     </li>
   );
