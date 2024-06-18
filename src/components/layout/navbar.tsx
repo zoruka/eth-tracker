@@ -6,7 +6,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   children = <DefaultNavbarContent />,
 }) => {
   return (
-    <nav className="w-full bg-background border-b sticky top-0 h-navbar">
+    <nav className="w-full bg-background border-b sticky top-0 h-navbar z-10">
       <div className="flex items-center justify-center w-content max-w-full h-full m-auto">
         {children}
       </div>

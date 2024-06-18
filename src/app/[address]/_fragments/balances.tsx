@@ -8,11 +8,14 @@ export const BalancesFragment: React.FC<BalancesFragmentProps> = ({
   balances,
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
-      {balances.map((balance, index) => (
-        <BalanceBadge key={index} balance={balance} />
-      ))}
-    </div>
+    <>
+      <h1 className="text-xl text-center font-bold m-8">Balances</h1>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {balances.map((balance, index) => (
+          <BalanceBadge key={index} balance={balance} />
+        ))}
+      </div>
+    </>
   );
 };
 
