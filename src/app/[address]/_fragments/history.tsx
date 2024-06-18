@@ -41,7 +41,7 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
 
       {log.transfers.length > 0 && (
         <Collapsible trigger="Transfers">
-          <div className="flex flex-col w-full border gap-2 p-2">
+          <div className="flex flex-col w-full gap-2 p-2">
             {log.transfers.map((transfer, index) => (
               <Transfer key={index} transfer={transfer} />
             ))}
