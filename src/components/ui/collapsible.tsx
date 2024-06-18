@@ -27,9 +27,21 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
         const height = collapserRef.current.scrollHeight;
         collapserRef.current.style.height = '0px';
         collapserRef.current.style.height = `${height}px`;
-      } else {
-        collapserRef.current.style.height = `0px`;
+
+        const resizeListener = () => {
+          if (collapserRef.current) {
+            collapserRef.current.style.height = 'auto';
+            collapserRef.current.style.height = `${collapserRef.current.scrollHeight}px`;
+          }
+        };
+
+        window.addEventListener('resize', resizeListener);
+        return () => {
+          window.removeEventListener('resize', resizeListener);
+        };
       }
+
+      collapserRef.current.style.height = `0px`;
     }
   }, [open]);
 
