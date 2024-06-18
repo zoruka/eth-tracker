@@ -1,3 +1,4 @@
+import { Collapsible } from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { formatAddress } from '@/lib/utils/format';
 
@@ -36,11 +37,13 @@ const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
       </div>
 
       {log.transfers.length > 0 && (
-        <div className="flex flex-col w-full border gap-2 p-2">
-          {log.transfers.map((transfer, index) => (
-            <Transfer key={index} transfer={transfer} />
-          ))}
-        </div>
+        <Collapsible trigger="Transfers">
+          <div className="flex flex-col w-full border gap-2 p-2">
+            {log.transfers.map((transfer, index) => (
+              <Transfer key={index} transfer={transfer} />
+            ))}
+          </div>
+        </Collapsible>
       )}
     </li>
   );
@@ -52,17 +55,21 @@ type TransferProps = {
 
 const Transfer: React.FC<TransferProps> = ({ transfer }) => {
   return (
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] [&:not(:last-child)]:border-b [&:not(:last-child)]:pb-2">
       <img
         src={transfer.imageUrl}
         alt={transfer.name}
         className="w-16 h-16 rounded"
       />
-      <span>{transfer.name}</span>
-      <span>{transfer.direction}</span>
-      <span>{transfer.quantity}</span>
-      <span>{transfer.value}</span>
-      <span>{transfer.price}</span>
+      <TransferCell>{transfer.name}</TransferCell>
+      <TransferCell>{transfer.direction}</TransferCell>
+      <TransferCell>{transfer.quantity}</TransferCell>
+      <TransferCell>{transfer.value || '-'}</TransferCell>
+      <TransferCell>{transfer.price || '-'}</TransferCell>
     </div>
   );
+};
+
+const TransferCell: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  return <span className="flex items-center justify-center">{children}</span>;
 };
