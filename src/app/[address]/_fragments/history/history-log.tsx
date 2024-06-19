@@ -8,6 +8,7 @@ import { Domain } from '@/lib/core';
 import { Collapsible } from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { cva } from 'class-variance-authority';
+import { Avatar } from '@/components/ui/avatar';
 
 export type HistoryLogProps = {
   log: Domain.Account.HistoryLog;
@@ -45,7 +46,7 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
       {log.transfers.length > 0 ? (
         <Transfers log={log} />
       ) : (
-        <HistoryLogMessage message=" There are no transfers for this transaction" />
+        <HistoryLogMessage message="There are no transfers for this transaction" />
       )}
     </li>
   );
@@ -157,10 +158,12 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
   return (
     <div className="grid grid-cols-4 md:grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] [&:not(:last-child)]:border-b [&:not(:last-child)]:pb-4 gap-4">
       <TransferCell className="col-span-1 md:col-span-1/2">
-        <img
+        <Avatar
+          className="rounded"
+          size="lg"
           src={transfer.imageUrl}
-          alt={transfer.name}
-          className="w-12 h-12 rounded"
+          alt={transfer.name || 'transfer-image'}
+          fallbackIcon="coin"
         />
       </TransferCell>
 

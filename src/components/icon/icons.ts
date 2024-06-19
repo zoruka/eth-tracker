@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  Coins,
   FileBadge,
   FolderInput,
   FolderOutput,
@@ -12,6 +13,7 @@ import { Spinner } from './spinner';
 export const icons = {
   'arrow-right': ArrowRight,
   contract: FileBadge,
+  coin: Coins,
   magnify: Search,
   spinner: Spinner,
   'tx-in': FolderInput,

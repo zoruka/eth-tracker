@@ -39,6 +39,10 @@ const ListContent: React.FC<ListContentProps> = async ({ address }) => {
 
   const { logs, cursor } = result;
 
+  if (logs.length === 0) {
+    return <HistoryLogMessage message="There are no history logs" />;
+  }
+
   return (
     <>
       {logs.map((log) => (
