@@ -1,10 +1,11 @@
 import { Account } from '@/lib/core/domain';
 import { HistoryLogTransfers } from './history-log-transfers';
-import { networks } from '@/lib/core/infra/networks';
+import { networks } from '@/lib/core/constants/networks';
 import { Badge } from '@/components/ui/badge';
 import { Network } from '@/lib/core/domain/network';
 import { formatAddress } from '@/lib/utils/format';
 import { Icon } from '@/components/icon';
+import { WithLabel } from '@/components/ui/with-label';
 
 export type HistoryFragmentProps = {
   history: Account.HistoryLog[];
@@ -102,21 +103,6 @@ const AddressLink: React.FC<AddressLinkProps> = ({
   }
 
   return <span>{address}</span>;
-};
-
-type WithLabelProps = React.PropsWithChildren<{
-  label: string;
-}>;
-
-const WithLabel: React.FC<WithLabelProps> = ({ label, children }) => {
-  return (
-    <div className="inline-flex items-center gap-1">
-      <span className="text-xs uppercase font-light text-foreground/60">
-        {label}:
-      </span>
-      {children}
-    </div>
-  );
 };
 
 const Timestamp: React.FC<{ timestamp: string }> = ({ timestamp }) => {

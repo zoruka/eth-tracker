@@ -1,8 +1,16 @@
 export namespace Account {
+  export type Metadata = {
+    address: string;
+    names: string[];
+    avatarUrl?: string;
+    type: 'contract' | 'wallet';
+  };
+
   export type Balance = {
     name: string;
     symbol: string;
     quantity: number;
+    chainId: string;
     iconUrl?: string;
   };
 
@@ -30,5 +38,11 @@ export namespace Account {
     quantity: number;
     value?: number;
     price?: number;
+  };
+
+  export type Controller = {
+    getMetadataFor: (address: string) => Promise<Metadata>;
+    getBalancesFor: (address: string) => Promise<Balance[]>;
+    getHistoryFor: (address: string) => Promise<HistoryLog[]>;
   };
 }

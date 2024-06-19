@@ -1,6 +1,9 @@
-import { getAddressData } from '@/lib/server/get-address-data';
 import { BalancesFragment } from './_fragments/balances';
 import { HistoryFragment } from './_fragments/history';
+import { HeroFragment } from './_fragments/hero';
+import { getAccountMetadata } from '@/lib/server/actions/get-account-metadata';
+import { getAccountBalance } from '@/lib/server/actions/get-account-balance';
+import { getAccountHistory } from '@/lib/server/actions/get-account-history';
 
 export type AddressPageProps = {
   params: {
@@ -11,12 +14,15 @@ export type AddressPageProps = {
 export default async function AddressPage({ params }: AddressPageProps) {
   let { address } = params;
 
-  const data = await getAddressData(address);
+  const metadata = await getAccountMetadata(address);
+  const balance = await getAccountBalance(address);
+  const history = await getAccountHistory(address);
 
   return (
     <>
-      <BalancesFragment balances={data.balance} />
-      <HistoryFragment history={data.history} />
+      <HeroFragment metadata={metadata as any} />
+      <BalancesFragment balances={balance as any} />
+      <HistoryFragment history={history as any} />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { Network } from '../domain/network';
  * Warning: Currently supporting only mostly used networks.
  * More networks can be added following https://github.com/WalletConnect/blockchain-api/blob/master/SUPPORTED_CHAINS.md
  */
-export const networks = {
+export const networks = Object.freeze({
   'eip155:1': {
     id: 'eip155:1',
     name: 'Ethereum Mainnet',
@@ -82,4 +82,4 @@ export const networks = {
         `https://explorer.solana.com/address/${address}`,
     },
   },
-} as Record<string, Network>;
+}) as Readonly<Record<string, Network>>;

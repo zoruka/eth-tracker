@@ -1,7 +1,7 @@
-import { Account } from '@/lib/core/domain';
+import type { Domain } from '@/lib/core';
 
 export type BalancesFragmentProps = {
-  balances: Account.Balance[];
+  balances: Domain.Account.Balance[];
 };
 
 export const BalancesFragment: React.FC<BalancesFragmentProps> = ({
@@ -20,7 +20,7 @@ export const BalancesFragment: React.FC<BalancesFragmentProps> = ({
 };
 
 type BalanceBadgeProps = {
-  balance: Account.Balance;
+  balance: Domain.Account.Balance;
 };
 
 const BalanceBadge: React.FC<BalanceBadgeProps> = ({ balance }) => {
