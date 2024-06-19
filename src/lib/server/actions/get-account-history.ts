@@ -4,14 +4,27 @@ import { Account, Domain } from '@/lib/core';
 import { createSafeAction } from '../infra/actions';
 import { cacheRequest } from '../infra/cache-request';
 
-export const getAccountHistory = createSafeAction(
-  async (address: string): Promise<Domain.Account.HistoryLog[]> => {
-    const history = await cacheRequest(
-      `account-history-${address}`,
-      () => Account.getHistoryFor(address),
-      180_000
-    );
+export const getAccountHistory = createSafeAction<
+  GetAccountHistory.Params,
+  GetAccountHistory.Result
+>(async ({ address, cursor }) => {
+  console.log('requesting', address, cursor);
 
-    return history;
-  }
-);
+  return cacheRequest(
+    `account-history-${address}-${cursor}`,
+    () => Account.getHistoryFor(address, cursor),
+    180_000
+  );
+});
+
+export namespace GetAccountHistory {
+  export type Params = {
+    address: string;
+    cursor?: string;
+  };
+
+  export type Result = {
+    logs: Domain.Account.HistoryLog[];
+    cursor: string | null;
+  };
+}

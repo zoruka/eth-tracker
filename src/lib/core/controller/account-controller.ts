@@ -26,7 +26,7 @@ export class AccountController implements Account.Controller {
     }
   }
 
-  getMetadataFor = async (address: string): Promise<Account.Metadata> => {
+  getMetadataFor: Account.Controller['getMetadataFor'] = async (address) => {
     const [names, isContract] = await Promise.all([
       this.ensAdapter.reverseResolve(address),
       this.ethereumAdapter.isContract(address),
@@ -39,7 +39,7 @@ export class AccountController implements Account.Controller {
     };
   };
 
-  getBalancesFor = async (address: string): Promise<Account.Balance[]> => {
+  getBalancesFor: Account.Controller['getBalancesFor'] = async (address) => {
     const { balances } = await this.blockchainApi.getBalance(address);
 
     const supportedChains = new Set(Object.keys(networks));
@@ -55,36 +55,43 @@ export class AccountController implements Account.Controller {
       }));
   };
 
-  getHistoryFor = async (address: string): Promise<Account.HistoryLog[]> => {
+  getHistoryFor: Account.Controller['getHistoryFor'] = async (
+    address,
+    cursor
+  ) => {
     try {
       const { data, next } = await this.blockchainApi.fetchTransactions({
         account: address,
         projectId: secrets.wc.projectId,
+        cursor,
       });
 
-      return data.map(({ metadata, transfers }) => ({
-        hash: metadata.hash,
-        chain: metadata.chain,
-        from: metadata.sentFrom,
-        to: metadata.sentTo,
-        timestamp: metadata.minedAt,
-        operation: metadata.operationType,
-        status: metadata.status,
-        transfers: transfers.map((transfer) => ({
-          name: transfer.fungible_info?.name || transfer.nft_info?.name,
-          imageUrl:
-            transfer.fungible_info?.icon?.url ||
-            transfer.nft_info?.content?.preview?.url,
-          direction: transfer.direction,
-          quantity: Number(transfer.quantity.numeric),
-          value: transfer.value,
-          price: transfer.price,
+      return {
+        logs: data.map(({ metadata, transfers }) => ({
+          hash: metadata.hash,
+          chain: metadata.chain,
+          from: metadata.sentFrom,
+          to: metadata.sentTo,
+          timestamp: metadata.minedAt,
+          operation: metadata.operationType,
+          status: metadata.status,
+          transfers: transfers.map((transfer) => ({
+            name: transfer.fungible_info?.name || transfer.nft_info?.name,
+            imageUrl:
+              transfer.fungible_info?.icon?.url ||
+              transfer.nft_info?.content?.preview?.url,
+            direction: transfer.direction,
+            quantity: Number(transfer.quantity.numeric),
+            value: transfer.value,
+            price: transfer.price,
+          })),
         })),
-      }));
+        cursor: next,
+      };
     } catch (e) {
       console.log('Failed to get history data', e);
 
-      return [];
+      return { logs: [], cursor: null };
     }
   };
 }

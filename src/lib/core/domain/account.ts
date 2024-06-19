@@ -43,6 +43,9 @@ export namespace Account {
   export type Controller = {
     getMetadataFor: (address: string) => Promise<Metadata>;
     getBalancesFor: (address: string) => Promise<Balance[]>;
-    getHistoryFor: (address: string) => Promise<HistoryLog[]>;
+    getHistoryFor: (
+      address: string,
+      cursor?: string
+    ) => Promise<{ logs: HistoryLog[]; cursor: string | null }>;
   };
 }

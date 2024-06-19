@@ -16,13 +16,12 @@ export default async function AddressPage({ params }: AddressPageProps) {
 
   const metadata = await getAccountMetadata(address);
   const balance = await getAccountBalance(address);
-  const history = await getAccountHistory(address);
 
   return (
     <>
       <HeroFragment metadata={metadata as any} />
       <BalancesFragment balances={balance as any} />
-      <HistoryFragment history={history as any} />
+      <HistoryFragment address={address} />
     </>
   );
 }
