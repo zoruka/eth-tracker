@@ -8,12 +8,10 @@ export const getAccountHistory = createSafeAction<
   GetAccountHistory.Params,
   GetAccountHistory.Result
 >(async ({ address, cursor }) => {
-  console.log('requesting', address, cursor);
-
   return cacheRequest(
     `account-history-${address}-${cursor}`,
     () => Account.getHistoryFor(address, cursor),
-    180_000
+    60_000
   );
 });
 

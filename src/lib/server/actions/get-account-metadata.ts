@@ -4,14 +4,18 @@ import { Account, Domain } from '@/lib/core';
 import { cacheRequest } from '../infra/cache-request';
 import { createSafeAction } from '../infra/actions';
 
-export const getAccountMetadata = createSafeAction(
-  async (address: string): Promise<Domain.Account.Metadata> => {
-    const metadata = await cacheRequest(
-      `account-metadata-${address}`,
-      () => Account.getMetadataFor(address),
-      180_000
-    );
+export const getAccountMetadata = createSafeAction<
+  GetAccountMetadata.Params,
+  GetAccountMetadata.Result
+>(async (address) => {
+  return cacheRequest(
+    `account-metadata-${address}`,
+    () => Account.getMetadataFor(address),
+    60_000
+  );
+});
 
-    return metadata;
-  }
-);
+export namespace GetAccountMetadata {
+  export type Params = string;
+  export type Result = Domain.Account.Metadata;
+}
