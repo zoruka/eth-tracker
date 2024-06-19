@@ -6,7 +6,7 @@ export type AvatarProps = {
   fallbackIcon: IconName;
   alt: string;
   className?: string;
-} & VariantProps<typeof avatarVariants>;
+} & Omit<VariantProps<typeof avatarVariants>, 'icon'>;
 
 export const Avatar: React.FC<AvatarProps> = ({
   src,
@@ -35,7 +35,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 };
 
 const avatarVariants = cva(
-  'flex items-center justify-center rounded-full overflow-hidden object-cover border bg-primary text-primary-foreground',
+  'flex items-center justify-center rounded-full overflow-hidden object-cover',
   {
     variants: {
       size: {
@@ -44,7 +44,7 @@ const avatarVariants = cva(
         lg: 'w-12 h-12',
       },
       icon: {
-        true: 'p-1',
+        true: 'p-1 bg-primary text-primary-foreground',
       },
     },
   }

@@ -1,7 +1,7 @@
 import { networks } from '@/lib/core/constants/networks';
 import { Badge } from '@/components/ui/badge';
 import { Network } from '@/lib/core/domain/network';
-import { formatAddress } from '@/lib/utils/format';
+import { formatAddress, formatCompactNumber } from '@/lib/utils/format';
 import { Icon } from '@/components/icon';
 import { WithLabel } from '@/components/ui/with-label';
 import { Domain } from '@/lib/core';
@@ -79,7 +79,17 @@ type NetworkBadgeProps = {
 };
 
 const NetworkBadge: React.FC<NetworkBadgeProps> = ({ network }) => {
-  return <Badge className="text-xs">{network?.name || 'Unknown'}</Badge>;
+  return (
+    <Badge className="text-xs">
+      <Avatar
+        src={network?.iconUrl}
+        fallbackIcon="network"
+        alt={network?.name || 'network icon'}
+        size="sm"
+      />
+      {network?.name || 'Unknown'}
+    </Badge>
+  );
 };
 
 type AddressLinkProps = {
@@ -187,16 +197,18 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
       <TransferCell
         title={transferColumns.quantity}
         className="col-span-2 md:col-span-1"
+        unity={transfer.symbol}
       >
-        {transfer.quantity}
+        {formatCompactNumber(transfer.quantity)}
       </TransferCell>
 
       {transfer.value && (
         <TransferCell
           title={transferColumns.value}
           className="col-span-2 md:col-span-1"
+          unity="USD"
         >
-          {transfer.value}
+          {formatCompactNumber(transfer.value)}
         </TransferCell>
       )}
 
@@ -204,8 +216,9 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
         <TransferCell
           title={transferColumns.price}
           className="col-span-2 md:col-span-1"
+          unity={`USD/${transfer.symbol}`}
         >
-          {transfer.price}
+          {formatCompactNumber(transfer.price)}
         </TransferCell>
       )}
     </div>
@@ -214,12 +227,14 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
 
 type TransferCellProps = React.HTMLAttributes<HTMLSpanElement> & {
   title?: string;
+  unity?: string;
 };
 
 const TransferCell: React.FC<TransferCellProps> = ({
   children,
   className,
   title,
+  unity,
 }) => {
   return (
     <div className={transferCellVariants({ className })}>
@@ -229,8 +244,13 @@ const TransferCell: React.FC<TransferCellProps> = ({
         </span>
       )}
       {children && (
-        <span className="flex items-center justify-center flex-1">
+        <span className="flex flex-col items-center justify-center flex-1">
           {children}
+          {unity && (
+            <span className="text-xs text-foreground/60 font-light">
+              {unity}
+            </span>
+          )}
         </span>
       )}
     </div>
@@ -242,7 +262,7 @@ const transferCellVariants = cva(
 );
 
 const cellTitleVariants = cva(
-  'text-center text-xs text-foreground/30 uppercase font-bold'
+  'text-center text-xs text-foreground/60 uppercase font-light'
 );
 
 const transferColumns = {

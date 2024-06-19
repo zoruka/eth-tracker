@@ -77,6 +77,7 @@ export class AccountController implements Account.Controller {
           status: metadata.status,
           transfers: transfers.map((transfer) => ({
             name: transfer.fungible_info?.name || transfer.nft_info?.name,
+            symbol: transfer.fungible_info?.symbol || 'NFT',
             imageUrl:
               transfer.fungible_info?.icon?.url ||
               transfer.nft_info?.content?.preview?.url,

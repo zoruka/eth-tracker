@@ -33,6 +33,7 @@ export namespace Account {
 
   export type HistoryLogTransfer = {
     name?: string;
+    symbol?: string;
     imageUrl?: string;
     direction: 'in' | 'out' | 'self';
     quantity: number;

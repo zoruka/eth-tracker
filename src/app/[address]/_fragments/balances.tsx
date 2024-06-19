@@ -1,5 +1,6 @@
 import { Avatar } from '@/components/ui/avatar';
 import type { Domain } from '@/lib/core';
+import { formatCompactNumber } from '@/lib/utils/format';
 
 export type BalancesFragmentProps = {
   balances: Domain.Account.Balance[];
@@ -26,15 +27,16 @@ type BalanceBadgeProps = {
 
 const BalanceBadge: React.FC<BalanceBadgeProps> = ({ balance }) => {
   return (
-    <div className="flex items-center rounded-full border px-2 py-1 gap-2">
+    <div className="flex items-center rounded-full border px-2 py-1 gap-2 bg-secondary">
       <Avatar
         src={balance.iconUrl}
         alt={balance.name}
         fallbackIcon="coin"
         size="sm"
       />
-      <span className="text-sm">
-        {balance.quantity} {balance.symbol}
+      <span className="text-nowrap max-w-[10rem] text-ellipsis overflow-hidden">
+        {formatCompactNumber(balance.quantity)}{' '}
+        <span className="text-foreground/60 font-light">{balance.symbol}</span>
       </span>
     </div>
   );
