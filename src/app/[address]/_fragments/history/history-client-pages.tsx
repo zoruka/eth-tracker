@@ -5,11 +5,8 @@ import {
   getAccountHistory,
 } from '@/lib/server/actions/get-account-history';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  HistoryLog,
-  HistoryLogFallback,
-  HistoryLogMessage,
-} from './history-log';
+import { HistoryLog, HistoryLogFallback } from './history-log';
+import { EmptyMessage } from '../shared';
 
 export type HistoryClientPagesProps = {
   address: string;
@@ -67,7 +64,7 @@ export const HistoryClientPages: React.FC<HistoryClientPagesProps> = ({
   }
 
   if (error) {
-    return <HistoryLogMessage message={error} />;
+    return <EmptyMessage>{error}</EmptyMessage>;
   }
 
   if (!result) {

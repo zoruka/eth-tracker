@@ -9,6 +9,7 @@ import { cva } from 'class-variance-authority';
 import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink } from '@/components/ui/external-link';
+import { EmptyMessage } from '../shared';
 
 export type HistoryLogProps = {
   log: Domain.Account.HistoryLog;
@@ -58,7 +59,7 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
       {log.transfers.length > 0 ? (
         <Transfers log={log} />
       ) : (
-        <HistoryLogMessage message="There are no transfers for this transaction" />
+        <EmptyMessage>There are no transfers for this transaction</EmptyMessage>
       )}
     </li>
   );
@@ -80,20 +81,6 @@ export const HistoryLogFallback: React.FC = () => {
       </div>
     </li>
   ));
-};
-
-export type HistoryLogMessageProps = {
-  message: string;
-};
-
-export const HistoryLogMessage: React.FC<HistoryLogMessageProps> = ({
-  message,
-}) => {
-  return (
-    <span className="text-foreground/60 italic text-center font-light">
-      {message}
-    </span>
-  );
 };
 
 type TransactionSummaryProps = {
