@@ -217,7 +217,7 @@ const AddressLink: React.FC<AddressLinkProps> = ({
     );
   }
 
-  return <span>{address}</span>;
+  return <span>{formatAddress(address)}</span>;
 };
 
 const Timestamp: React.FC<{ timestamp: string }> = ({ timestamp }) => {

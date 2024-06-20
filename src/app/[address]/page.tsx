@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { formatAddress } from '@/lib/utils/format';
 import { site } from '@/config/site';
+import { RecentSearchesUpdaterFragment } from './_fragments/recent-searches-updater';
 
 export type AddressPageProps = {
   params: {
@@ -35,6 +36,7 @@ export default async function AddressPage({ params }: AddressPageProps) {
       <HeroFragment metadata={metadata} />
       <BalancesFragment address={address} />
       <HistoryFragment address={address} />
+      <RecentSearchesUpdaterFragment address={address} />
     </>
   );
 }
