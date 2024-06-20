@@ -4,10 +4,11 @@ import { EnsAdapter } from './adapter/ens-adapter';
 import { EthereumAdapter } from './adapter/ethereum-adapter';
 import { networks } from './constant/networks';
 import { Logger } from './util/logger';
+import { IdentifiedError } from './util/error';
 
 const Account = new AccountController({
   ensAdapter: new EnsAdapter(),
   ethereumAdapter: new EthereumAdapter(),
 });
 
-export { Domain, Account, Logger, networks };
+export { Domain, Account, Logger, IdentifiedError, networks };

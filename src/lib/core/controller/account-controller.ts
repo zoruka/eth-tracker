@@ -5,6 +5,7 @@ import { EthereumAdapter } from '../adapter/ethereum-adapter';
 import { secrets } from '@/config/secrets';
 import { networks } from '../constant/networks';
 import { Logger } from '../util/logger';
+import { IdentifiedError } from '../util/error';
 
 export class AccountController implements Account.Controller {
   private ensAdapter: EnsAdapter;
@@ -28,38 +29,68 @@ export class AccountController implements Account.Controller {
   }
 
   getMetadataFor: Account.Controller['getMetadataFor'] = async (address) => {
-    const [names, isContract] = await Promise.all([
-      this.ensAdapter.reverseResolve(address),
-      this.ethereumAdapter.isContract(address),
-    ]);
+    try {
+      const [names, isContract] = await Promise.all([
+        this.ensAdapter.reverseResolve(address),
+        this.ethereumAdapter.isContract(address),
+      ]);
 
-    return {
-      address,
-      type: isContract ? 'contract' : 'wallet',
-      names,
-    };
+      return {
+        address,
+        type: isContract ? 'contract' : 'wallet',
+        names,
+      };
+    } catch (error) {
+      Logger.log({
+        origin: 'core',
+        key: 'AccountController.getMetadataFor',
+        level: 'error',
+        data: error,
+      });
+
+      throw new IdentifiedError('Failed to fetch account metadata', error);
+    }
   };
 
   getBalancesFor: Account.Controller['getBalancesFor'] = async (address) => {
-    const { balances } = await this.blockchainApi.getBalance(address);
+    try {
+      const { balances } = await this.blockchainApi.getBalance(address);
 
-    const supportedChains = new Set(Object.keys(networks));
+      const supportedChains = new Set(Object.keys(networks));
 
-    return balances
-      .filter((balance) => supportedChains.has(balance.chainId))
-      .map((balance) => ({
-        chainId: balance.chainId,
-        name: balance.name,
-        symbol: balance.symbol,
-        quantity: Number(balance.quantity.numeric),
-        iconUrl: balance.iconUrl,
-      }));
+      return balances
+        .filter((balance) => supportedChains.has(balance.chainId))
+        .map((balance) => ({
+          chainId: balance.chainId,
+          name: balance.name,
+          symbol: balance.symbol,
+          quantity: Number(balance.quantity.numeric),
+          iconUrl: balance.iconUrl,
+        }));
+    } catch (error) {
+      Logger.log({
+        origin: 'core',
+        key: 'AccountController.getBalancesFor',
+        level: 'error',
+        data: error,
+      });
+
+      throw new IdentifiedError('Failed to fetch account balances', error);
+    }
   };
 
   getHistoryFor: Account.Controller['getHistoryFor'] = async (
     address,
     cursor
   ) => {
+    const isContract = await this.ethereumAdapter.isContract(address);
+
+    if (isContract) {
+      throw new IdentifiedError(
+        'History for contract addresses are not supported yet'
+      );
+    }
+
     try {
       const { data, next } = await this.blockchainApi.fetchTransactions({
         account: address,
@@ -93,12 +124,12 @@ export class AccountController implements Account.Controller {
     } catch (error) {
       Logger.log({
         origin: 'core',
-        key: 'AccountController',
+        key: 'AccountController.getHistoryFor',
         level: 'error',
         data: error,
       });
 
-      return { logs: [], cursor: null };
+      throw new IdentifiedError('Failed to fetch account history', error);
     }
   };
 }

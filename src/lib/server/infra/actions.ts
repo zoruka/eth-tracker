@@ -1,4 +1,4 @@
-import { Logger } from '@/lib/core';
+import { IdentifiedError, Logger } from '@/lib/core';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 
 export const createSafeAction = <Params, Response>(
@@ -14,6 +14,10 @@ export const createSafeAction = <Params, Response>(
 
       if (error instanceof SafeActionError) {
         return { error: error.clientText };
+      }
+
+      if (error instanceof IdentifiedError) {
+        return { error: error.message };
       }
 
       Logger.log({
