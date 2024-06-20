@@ -1,10 +1,8 @@
-import { networks } from '@/lib/core/constants/networks';
 import { Badge } from '@/components/ui/badge';
-import { Network } from '@/lib/core/domain/network';
 import { formatAddress, formatCompactNumber } from '@/lib/utils/format';
 import { Icon } from '@/components/icon';
 import { WithLabel } from '@/components/ui/with-label';
-import { Domain } from '@/lib/core';
+import { Domain, networks } from '@/lib/core';
 import { Collapsible } from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { cva } from 'class-variance-authority';
@@ -157,7 +155,7 @@ const TransactionSummary: React.FC<TransactionSummaryProps> = ({ log }) => {
 };
 
 type NetworkBadgeProps = {
-  network?: Network;
+  network?: Domain.Network;
 };
 
 const NetworkBadge: React.FC<NetworkBadgeProps> = ({ network }) => {
@@ -211,7 +209,7 @@ const dataBadgeVariants = cva('text-xs min-w-fit gap-1');
 type AddressLinkProps = {
   type: 'address' | 'tx';
   address: string;
-  network?: Network;
+  network?: Domain.Network;
 };
 
 const AddressLink: React.FC<AddressLinkProps> = ({

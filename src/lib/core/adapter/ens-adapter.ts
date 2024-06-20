@@ -1,4 +1,5 @@
 import { secrets } from '@/config/secrets';
+import { Logger } from '../util/logger';
 
 export class EnsAdapter {
   private fetch: EnsAdapter.Fetch;
@@ -32,8 +33,13 @@ export class EnsAdapter {
       }
 
       throw new Error('Invalid ENS subgraph response');
-    } catch (e) {
-      console.log('Failed to get ENS data', e);
+    } catch (error) {
+      Logger.log({
+        origin: 'core',
+        key: 'EnsAdapter',
+        level: 'error',
+        data: error,
+      });
 
       return [];
     }

@@ -1,3 +1,4 @@
+import { Logger } from '@/lib/core';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 
 export const createSafeAction = <Params, Response>(
@@ -15,11 +16,12 @@ export const createSafeAction = <Params, Response>(
         return { error: error.clientText };
       }
 
-      // Logger.error({
-      //   key: 'ServerAction',
-      //   message: action.name,
-      //   data: error,
-      // });
+      Logger.log({
+        level: 'error',
+        origin: 'server',
+        key: `ServerAction_${action.name}`,
+        data: error,
+      });
 
       return { error: 'An unknown error happened' };
     }

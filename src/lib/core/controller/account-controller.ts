@@ -3,7 +3,8 @@ import { Account } from '../domain';
 import { EnsAdapter } from '../adapter/ens-adapter';
 import { EthereumAdapter } from '../adapter/ethereum-adapter';
 import { secrets } from '@/config/secrets';
-import { networks } from '../constants/networks';
+import { networks } from '../constant/networks';
+import { Logger } from '../util/logger';
 
 export class AccountController implements Account.Controller {
   private ensAdapter: EnsAdapter;
@@ -14,9 +15,9 @@ export class AccountController implements Account.Controller {
     ensAdapter,
     ethereumAdapter,
     blockchainApi,
-  }: AccountController.Params = {}) {
-    this.ensAdapter = ensAdapter || new EnsAdapter();
-    this.ethereumAdapter = ethereumAdapter || new EthereumAdapter();
+  }: AccountController.Params) {
+    this.ensAdapter = ensAdapter;
+    this.ethereumAdapter = ethereumAdapter;
 
     if (blockchainApi) {
       this.blockchainApi = blockchainApi;
@@ -89,8 +90,13 @@ export class AccountController implements Account.Controller {
         })),
         cursor: next,
       };
-    } catch (e) {
-      console.log('Failed to get history data', e);
+    } catch (error) {
+      Logger.log({
+        origin: 'core',
+        key: 'AccountController',
+        level: 'error',
+        data: error,
+      });
 
       return { logs: [], cursor: null };
     }
@@ -99,8 +105,8 @@ export class AccountController implements Account.Controller {
 
 export namespace AccountController {
   export type Params = {
-    ensAdapter?: EnsAdapter;
-    ethereumAdapter?: EthereumAdapter;
+    ensAdapter: EnsAdapter;
+    ethereumAdapter: EthereumAdapter;
     blockchainApi?: BlockchainApi;
   };
 
