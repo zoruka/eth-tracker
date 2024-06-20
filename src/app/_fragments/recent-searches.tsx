@@ -18,7 +18,7 @@ export const RecentSearchesFragment: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2 text-center mt-8">
+    <div className="flex flex-col gap-2 text-center mt-8 animate-fade-in">
       <h3 className="text-foreground/60 font-bold text-lg">
         Previously Searched
       </h3>
