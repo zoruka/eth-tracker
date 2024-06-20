@@ -8,6 +8,7 @@ import { Account } from '@/lib/core/domain';
 import { cva } from 'class-variance-authority';
 import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ExternalLink } from '@/components/ui/external-link';
 
 export type HistoryLogProps = {
   log: Domain.Account.HistoryLog;
@@ -219,14 +220,9 @@ const AddressLink: React.FC<AddressLinkProps> = ({
 }) => {
   if (network) {
     return (
-      <a
-        href={network.explorer[type](address)}
-        target="_blank"
-        rel="noreferrer"
-        className="text-primary underline"
-      >
+      <ExternalLink href={network.explorer[type](address)}>
         {formatAddress(address)}
-      </a>
+      </ExternalLink>
     );
   }
 
