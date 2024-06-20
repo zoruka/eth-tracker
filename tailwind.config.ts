@@ -20,7 +20,8 @@ const config = {
     extend: {
       spacing: {
         navbar: '4rem',
-        main: 'calc(100dvh - 4rem)',
+        footer: '2rem',
+        main: 'calc(100dvh - 4rem - 2rem)',
         content: '880px',
       },
       colors: {

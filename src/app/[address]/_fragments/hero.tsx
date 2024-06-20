@@ -9,7 +9,7 @@ export type HeroFragmentProps = {
 
 export const HeroFragment: React.FC<HeroFragmentProps> = ({ metadata }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-2">
+    <section className="flex flex-col items-center justify-center gap-2">
       <div className="flex justify-center items-center w-16 h-16 rounded-full bg-primary text-4xl text-primary-foreground">
         <Icon name={metadata.type} />
       </div>
@@ -24,6 +24,6 @@ export const HeroFragment: React.FC<HeroFragmentProps> = ({ metadata }) => {
           </div>
         </WithLabel>
       )}
-    </div>
+    </section>
   );
 };
