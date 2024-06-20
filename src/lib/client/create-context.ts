@@ -6,19 +6,16 @@ import {
 } from 'react';
 
 export type CreateContextArgs = {
-	hookName: string;
-	providerName: string;
-	name: string;
+  hookName: string;
+  providerName: string;
+  name: string;
 };
 
 export type CreateContextReturn<T> = [
-	React.Provider<T>,
-	() => T,
-	React.Context<T>
+  React.Provider<T>,
+  () => T,
+  React.Context<T>
 ];
-
-const getErrorMessage = (hook: string, provider: string): string =>
-  `${hook} returned \`undefined\`. Seems you forgot to wrap component within ${provider}`;
 
 export const createContext = <T>({
   name,
@@ -44,3 +41,6 @@ export const createContext = <T>({
 
   return [Context.Provider, useContext, Context] as CreateContextReturn<T>;
 };
+
+const getErrorMessage = (hook: string, provider: string): string =>
+  `${hook} returned \`undefined\`. Seems you forgot to wrap component within ${provider}`;
