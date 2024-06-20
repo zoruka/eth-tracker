@@ -38,12 +38,13 @@ export const FormFragment: React.FC = () => {
         onChange={handleAddressChange}
         className="w-full md:w-96"
         autoFocus
+        name="eth-address"
       />
       <Button
         disabled={!enableSearch}
         type="submit"
         loading={loading}
-        className="w-32"
+        className="w-full md:w-32"
       >
         Track
         <Icon name="magnify" />
