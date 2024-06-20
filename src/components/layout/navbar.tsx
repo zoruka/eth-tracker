@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { Logo } from './logo';
+import { routes } from '@/config/routes';
 
 export type NavbarProps = React.PropsWithChildren<{}>;
 
@@ -15,5 +17,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 };
 
 const DefaultNavbarContent: React.FC = () => {
-  return <Logo />;
+  return (
+    <Link href={routes.home()}>
+      <Logo />
+    </Link>
+  );
 };
