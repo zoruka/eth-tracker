@@ -9,6 +9,7 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { cva } from 'class-variance-authority';
 import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export type HistoryLogProps = {
   log: Domain.Account.HistoryLog;
@@ -65,10 +66,19 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
 };
 
 export const HistoryLogFallback: React.FC = () => {
-  // TODO: Create a skeleton loader for the history log
   return new Array(3).fill(0).map((_, index) => (
-    <li key={index} className="w-full h-[15.1875rem] bg-secondary border">
-      loading...
+    <li
+      key={index}
+      className="flex flex-col w-full h-[22.4375rem] md:h-[15.1875rem] border p-4 gap-2 bg-secondary rounded relative"
+    >
+      <Skeleton className="h-6 w-3/4" />
+      <Skeleton className="h-6 w-4/5" />
+      <Skeleton className="h-6 w-3/5" />
+      <Skeleton className="h-6 w-4/5" />
+      <Skeleton className="h-6 w-1/2" />
+      <div className="flex-1 flex items-end mt-2">
+        <Skeleton className="h-8 w-full" />
+      </div>
     </li>
   ));
 };
