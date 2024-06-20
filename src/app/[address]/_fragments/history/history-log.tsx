@@ -211,7 +211,7 @@ const AddressLink: React.FC<AddressLinkProps> = ({
 }) => {
   if (network) {
     return (
-      <ExternalLink href={network.explorer[type](address)}>
+      <ExternalLink href={network.explorer[type](address)} className="text-sm">
         {formatAddress(address)}
       </ExternalLink>
     );
