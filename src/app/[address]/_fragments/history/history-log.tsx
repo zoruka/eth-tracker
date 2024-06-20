@@ -18,29 +18,37 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
   const network = log.chain ? networks[log.chain] ?? undefined : undefined;
 
   return (
-    <li className="flex flex-col w-full border p-4 gap-4 bg-secondary rounded">
-      <div className="grid grid-cols-1 gap-2 relative">
-        <WithLabel label="Network">
-          <NetworkBadge network={network} />
-        </WithLabel>
-        <WithLabel label="Operation">{log.operation}</WithLabel>
-        <WithLabel label="Status">{log.status}</WithLabel>
+    <li className="flex flex-col w-full border p-4 gap-4 bg-secondary rounded relative">
+      <Timestamp timestamp={log.timestamp} />
 
-        <div className="inline-flex gap-2 items-center">
-          <WithLabel label="From">
-            <AddressLink address={log.from} network={network} type="address" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
+          <WithLabel label="Network">
+            <NetworkBadge network={network} />
           </WithLabel>
-          <Icon name="arrow-right" />
-          <WithLabel label="To">
-            <AddressLink address={log.to} network={network} type="address" />
+          <WithLabel label="Operation">{log.operation}</WithLabel>
+          <WithLabel label="Status">{log.status}</WithLabel>
+
+          <div className="inline-flex gap-2 items-center">
+            <WithLabel label="From">
+              <AddressLink
+                address={log.from}
+                network={network}
+                type="address"
+              />
+            </WithLabel>
+            <Icon name="arrow-right" />
+            <WithLabel label="To">
+              <AddressLink address={log.to} network={network} type="address" />
+            </WithLabel>
+          </div>
+
+          <WithLabel label="Hash">
+            <AddressLink address={log.hash} network={network} type="tx" />
           </WithLabel>
         </div>
 
-        <WithLabel label="Hash">
-          <AddressLink address={log.hash} network={network} type="tx" />
-        </WithLabel>
-
-        <Timestamp timestamp={log.timestamp} />
+        <TransactionSummary log={log} />
       </div>
 
       {log.transfers.length > 0 ? (
@@ -53,6 +61,7 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
 };
 
 export const HistoryLogFallback: React.FC = () => {
+  // TODO: Create a skeleton loader for the history log
   return new Array(3).fill(0).map((_, index) => (
     <li key={index} className="w-full h-[15.1875rem] bg-secondary border">
       loading...
@@ -74,13 +83,72 @@ export const HistoryLogMessage: React.FC<HistoryLogMessageProps> = ({
   );
 };
 
+type TransactionSummaryProps = {
+  log: Domain.Account.HistoryLog;
+};
+
+const TransactionSummary: React.FC<TransactionSummaryProps> = ({ log }) => {
+  const value = log.transfers.reduce(
+    (acc, transfer) =>
+      acc + (transfer.direction === 'out' ? -1 : 1) * (transfer.value ?? 0),
+    0
+  );
+
+  return (
+    <div className="flex flex-col items-center md:items-end gap-2">
+      {log.transfers.length > 0 && (
+        <div className="flex flex-row pl-[0.6rem]">
+          {log.transfers.map((transfer, index) => (
+            <div
+              key={index}
+              className="-ml-2 relative w-12 h-12 border border-4 rounded-md overflow-hidden bg-border"
+            >
+              <Avatar
+                key={index}
+                src={transfer.imageUrl}
+                fallbackIcon="coin"
+                alt={transfer.name || 'transfer-image'}
+                size="lg"
+                className="rounded-md"
+              />
+              <div className="absolute flex items-center justify-center -bottom-1 -left-1 bg-border rounded-tr p-1 w-5 h-5">
+                {transfer.direction === 'in' && (
+                  <Icon name="plus" className="text-success" />
+                )}
+                {transfer.direction === 'out' && (
+                  <Icon name="minus" className="text-destructive" />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="inline-flex items-end mt-1">
+        <span
+          className={`text-lg leading-4 ${value > 0 && 'text-success'} ${
+            value < 0 && 'text-destructive'
+          }
+          }`}
+        >
+          {value > 0 && '+'}
+          {formatCompactNumber(value)}
+        </span>
+        <span className="text-foreground/60 font-light ml-1 text-xs leading-3">
+          USD
+        </span>
+      </div>
+    </div>
+  );
+};
+
 type NetworkBadgeProps = {
   network?: Network;
 };
 
 const NetworkBadge: React.FC<NetworkBadgeProps> = ({ network }) => {
   return (
-    <Badge className="text-xs">
+    <Badge className="text-xs min-w-fit">
       <Avatar
         src={network?.iconUrl}
         fallbackIcon="network"
@@ -121,7 +189,7 @@ const AddressLink: React.FC<AddressLinkProps> = ({
 
 const Timestamp: React.FC<{ timestamp: string }> = ({ timestamp }) => {
   return (
-    <span className="absolute top-[-1.5rem] justify-self-center text-xs text-primary-foreground font-bold bg-primary rounded-full px-2 py-1 border">
+    <span className="absolute top-0 -translate-x-1/2 left-[50%] -translate-y-1/2 justify-self-center text-xs text-primary-foreground font-bold bg-primary rounded-full px-2 py-1 border">
       {new Date(timestamp).toLocaleString()}
     </span>
   );
@@ -133,7 +201,7 @@ type TransfersProps = {
 
 const Transfers: React.FC<TransfersProps> = ({ log }) => {
   return (
-    <Collapsible trigger="Transfers">
+    <Collapsible trigger="Transfers Breakdown">
       <div className="hidden md:grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] border-b py-2 px-4 gap-4">
         <div />
         <span className={cellTitleVariants()}>{transferColumns.name}</span>
@@ -169,7 +237,7 @@ const Transfer: React.FC<TransferProps> = ({ transfer }) => {
     <div className="grid grid-cols-4 md:grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] [&:not(:last-child)]:border-b [&:not(:last-child)]:pb-4 gap-4">
       <TransferCell className="col-span-1 md:col-span-1/2">
         <Avatar
-          className="rounded"
+          className="rounded-md"
           size="lg"
           src={transfer.imageUrl}
           alt={transfer.name || 'transfer-image'}
@@ -244,7 +312,7 @@ const TransferCell: React.FC<TransferCellProps> = ({
         </span>
       )}
       {children && (
-        <span className="flex flex-col items-center justify-center flex-1">
+        <span className="flex flex-col items-center justify-center flex-1 text-center">
           {children}
           {unity && (
             <span className="text-xs text-foreground/60 font-light">

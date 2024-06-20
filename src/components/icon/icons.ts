@@ -6,6 +6,8 @@ import {
   FolderOutput,
   FolderSync,
   Globe,
+  Minus,
+  Plus,
   Search,
   Wallet,
 } from 'lucide-react';
@@ -16,7 +18,9 @@ export const icons = {
   coin: Coins,
   contract: FileBadge,
   magnify: Search,
+  minus: Minus,
   network: Globe,
+  plus: Plus,
   spinner: Spinner,
   'tx-in': FolderInput,
   'tx-out': FolderOutput,

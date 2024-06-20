@@ -77,8 +77,8 @@ const collapserVariants = cva(
   {
     variants: {
       open: {
-        true: 'opacity-100',
-        false: 'opacity-0',
+        true: 'opacity-100 h-auto',
+        false: 'opacity-0 h-0',
       },
     },
   }
