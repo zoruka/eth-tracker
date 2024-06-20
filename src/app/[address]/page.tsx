@@ -2,11 +2,13 @@ import { BalancesFragment } from './_fragments/balances';
 import { HistoryFragment } from './_fragments/history';
 import { HeroFragment } from './_fragments/hero';
 import { getAccountMetadata } from '@/lib/server/actions/get-account-metadata';
-import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { formatAddress } from '@/lib/utils/format';
 import { site } from '@/config/site';
 import { RecentSearchesUpdaterFragment } from './_fragments/recent-searches-updater';
+import { validators } from '@/lib/utils/validators';
+import { EmptyMessage } from './_fragments/shared';
+import { InvalidAddressFragment } from './_fragments/invalid-address';
 
 export type AddressPageProps = {
   params: {
@@ -25,10 +27,14 @@ export const generateMetadata = ({ params }: AddressPageProps): Metadata => {
 export default async function AddressPage({ params }: AddressPageProps) {
   let { address } = params;
 
+  if (!validators.isAddress(address)) {
+    return <InvalidAddressFragment address={address} />;
+  }
+
   const metadata = await getAccountMetadata(address);
 
   if ('error' in metadata) {
-    return redirect('/');
+    return <EmptyMessage>{metadata.error}</EmptyMessage>;
   }
 
   return (
