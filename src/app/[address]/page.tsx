@@ -2,13 +2,22 @@ import { BalancesFragment } from './_fragments/balances';
 import { HistoryFragment } from './_fragments/history';
 import { HeroFragment } from './_fragments/hero';
 import { getAccountMetadata } from '@/lib/server/actions/get-account-metadata';
-import { getAccountBalance } from '@/lib/server/actions/get-account-balance';
-import { getAccountHistory } from '@/lib/server/actions/get-account-history';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+import { formatAddress } from '@/lib/utils/format';
+import { site } from '@/config/site';
 
 export type AddressPageProps = {
   params: {
     address: string;
+  };
+};
+
+export const generateMetadata = ({ params }: AddressPageProps): Metadata => {
+  let { address } = params;
+
+  return {
+    title: `${site.name} (${formatAddress(address)})`,
   };
 };
 
