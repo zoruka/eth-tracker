@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react';
 export const FormFragment: React.FC = () => {
   const router = useRouter();
   const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const enableSearch = useMemo(() => validators.isAddress(address), [address]);
 
@@ -22,13 +23,13 @@ export const FormFragment: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     if (!enableSearch) return;
-
+    setLoading(true);
     router.push(routes.address(address));
   };
 
   return (
     <form
-      className="flex flex-col md:flex-row w-[25rem] max-w-full gap-2 mx-auto"
+      className="flex flex-col md:flex-row w-full max-w-[26rem] gap-2 mx-auto"
       onSubmit={handleSubmit}
     >
       <Input
@@ -36,8 +37,14 @@ export const FormFragment: React.FC = () => {
         value={address}
         onChange={handleAddressChange}
         className="w-full md:w-96"
+        autoFocus
       />
-      <Button disabled={!enableSearch} type="submit">
+      <Button
+        disabled={!enableSearch}
+        type="submit"
+        loading={loading}
+        className="w-32"
+      >
         Track
         <Icon name="magnify" />
       </Button>
