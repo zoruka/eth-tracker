@@ -11,6 +11,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { parseNetworkId } from '@/lib/utils/parse-network-id';
 
 export type BalancesFragmentProps = {
   address: string;
@@ -78,14 +79,25 @@ type BalanceBadgeProps = {
 };
 
 const BalanceBadge: React.FC<BalanceBadgeProps> = ({ balance }) => {
+  const network = parseNetworkId(balance.chainId);
+
   return (
     <div className={balanceBadgeContainerVariants()}>
-      <Avatar
-        src={balance.iconUrl}
-        alt={balance.name}
-        fallbackIcon="coin"
-        size="sm"
-      />
+      <div className="relative">
+        <Avatar
+          src={balance.iconUrl}
+          alt={balance.name}
+          fallbackIcon="coin"
+          size="sm"
+        />
+        <Avatar
+          src={network?.iconUrl}
+          alt={network?.name || 'unknown network'}
+          fallbackIcon="network"
+          size="xs"
+          className="absolute bottom-0 -right-1 ring ring-border ring-1 w-3 h-3 bg-background"
+        />
+      </div>
       <span className="text-nowrap max-w-[10rem] text-ellipsis overflow-hidden">
         {formatCompactNumber(balance.quantity)}{' '}
         <span className="text-foreground/60 font-light">{balance.symbol}</span>
