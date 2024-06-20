@@ -1,5 +1,6 @@
 import { secrets } from '@/config/secrets';
 import { Logger } from '../util/logger';
+import { IdentifiedError } from '../util/error';
 
 export class EnsAdapter {
   private fetch: EnsAdapter.Fetch;
@@ -32,7 +33,9 @@ export class EnsAdapter {
         return json.data.domains.map((domain: { name: string }) => domain.name);
       }
 
-      throw new Error('Invalid ENS subgraph response');
+      throw new IdentifiedError('Invalid response from ENS subgraph', {
+        response: json,
+      });
     } catch (error) {
       Logger.log({
         origin: 'core',

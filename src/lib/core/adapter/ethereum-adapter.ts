@@ -1,3 +1,4 @@
+import { secrets } from '@/config/secrets';
 import { Address, PublicClient, createPublicClient, http } from 'viem';
 import { getCode } from 'viem/actions';
 import { mainnet } from 'viem/chains';
@@ -10,7 +11,7 @@ export class EthereumAdapter {
       client ||
       createPublicClient({
         chain: mainnet,
-        transport: http(),
+        transport: http(secrets.ethereum.rpcUrl),
       });
   }
 
