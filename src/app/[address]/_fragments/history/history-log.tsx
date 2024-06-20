@@ -3,7 +3,11 @@ import { formatAddress, formatCompactNumber } from '@/lib/utils/format';
 import { Icon } from '@/components/icon';
 import { WithLabel } from '@/components/ui/with-label';
 import { Domain, networks } from '@/lib/core';
-import { Collapsible } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { Account } from '@/lib/core/domain';
 import { cva } from 'class-variance-authority';
 import { Avatar } from '@/components/ui/avatar';
@@ -230,21 +234,29 @@ type TransfersProps = {
 
 const Transfers: React.FC<TransfersProps> = ({ log }) => {
   return (
-    <Collapsible trigger="Transfers Breakdown">
-      <div className="hidden md:grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] border-b py-2 px-4 gap-4">
-        <div />
-        <span className={cellTitleVariants()}>{transferColumns.name}</span>
-        <span className={cellTitleVariants()}>{transferColumns.direction}</span>
-        <span className={cellTitleVariants()}>{transferColumns.quantity}</span>
-        <span className={cellTitleVariants()}>{transferColumns.value}</span>
-        <span className={cellTitleVariants()}>{transferColumns.price}</span>
-      </div>
+    <Collapsible>
+      <CollapsibleTrigger>Transfers Breakdown</CollapsibleTrigger>
 
-      <div className="flex flex-col w-full gap-4 p-4">
-        {log.transfers.map((transfer, index) => (
-          <Transfer key={index} transfer={transfer} />
-        ))}
-      </div>
+      <CollapsibleContent>
+        <div className="hidden md:grid grid-cols-[4rem_2fr_4rem_1fr_1fr_1fr] border-b py-2 px-4 gap-4">
+          <div />
+          <span className={cellTitleVariants()}>{transferColumns.name}</span>
+          <span className={cellTitleVariants()}>
+            {transferColumns.direction}
+          </span>
+          <span className={cellTitleVariants()}>
+            {transferColumns.quantity}
+          </span>
+          <span className={cellTitleVariants()}>{transferColumns.value}</span>
+          <span className={cellTitleVariants()}>{transferColumns.price}</span>
+        </div>
+
+        <div className="flex flex-col w-full gap-4 p-4">
+          {log.transfers.map((transfer, index) => (
+            <Transfer key={index} transfer={transfer} />
+          ))}
+        </div>
+      </CollapsibleContent>
     </Collapsible>
   );
 };

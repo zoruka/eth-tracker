@@ -6,6 +6,11 @@ import { formatCompactNumber } from '@/lib/utils/format';
 import { cva } from 'class-variance-authority';
 import { Suspense } from 'react';
 import { EmptyMessage, SectionHeader } from './shared';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 export type BalancesFragmentProps = {
   address: string;
@@ -40,9 +45,32 @@ const BalancesListItems: React.FC<BalancesListItemsProps> = async ({
     return <EmptyMessage>{balances.error}</EmptyMessage>;
   }
 
-  return balances.map((balance, index) => (
-    <BalanceBadge key={index} balance={balance} />
-  ));
+  if (balances.length === 0) {
+    return <EmptyMessage>There are no balances</EmptyMessage>;
+  }
+
+  const showingBalances = balances.slice(0, 8);
+  const remainingBalances = balances.slice(8);
+
+  return (
+    <>
+      {showingBalances.map((balance, index) => (
+        <BalanceBadge key={index} balance={balance} />
+      ))}
+      {remainingBalances.length > 0 && (
+        <Collapsible className="w-full">
+          <CollapsibleTrigger className="w-full rounded-md">
+            {`Show ${remainingBalances.length} more`}
+          </CollapsibleTrigger>
+          <CollapsibleContent className="flex flex-wrap items-center justify-center gap-2 border-none mt-2">
+            {remainingBalances.map((balance, index) => (
+              <BalanceBadge key={index} balance={balance} />
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+    </>
+  );
 };
 
 type BalanceBadgeProps = {
@@ -67,10 +95,14 @@ const BalanceBadge: React.FC<BalanceBadgeProps> = ({ balance }) => {
 };
 
 const BalancesFallback: React.FC = () => {
-  return new Array(5).fill(null).map((_, index) => (
-    <div key={index} className={balanceBadgeContainerVariants()}>
+  return new Array(8).fill(null).map((_, index) => (
+    <div
+      key={index}
+      className={balanceBadgeContainerVariants()}
+      style={{ width: `${Math.random() * 9 + 6}rem` }}
+    >
       <Skeleton className="w-6 h-6 rounded-full" />
-      <Skeleton className="w-20 h-6" />
+      <Skeleton className="flex-1 h-6" />
     </div>
   ));
 };
