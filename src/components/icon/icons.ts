@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   Check,
+  ChevronDown,
   Coins,
   Cross,
   ExternalLink,
@@ -19,6 +20,7 @@ import { Spinner } from './spinner';
 export const icons = {
   'arrow-right': ArrowRight,
   check: Check,
+  'chevron-down': ChevronDown,
   coin: Coins,
   contract: FileBadge,
   cross: Cross,

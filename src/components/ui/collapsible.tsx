@@ -3,6 +3,7 @@
 import { cva } from 'class-variance-authority';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from './button';
+import { Icon } from '../icon';
 
 export type CollapsibleProps = React.PropsWithChildren<{
   trigger: React.ReactNode;
@@ -53,6 +54,7 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
         variant="outline"
       >
         {trigger}
+        <Icon name="chevron-down" className={indicatorVariants({ open })} />
       </Button>
       <div ref={collapserRef} className={collapserVariants({ open })}>
         {children}
@@ -83,3 +85,11 @@ const collapserVariants = cva(
     },
   }
 );
+
+const indicatorVariants = cva('transition', {
+  variants: {
+    open: {
+      true: 'transform rotate-180',
+    },
+  },
+});
