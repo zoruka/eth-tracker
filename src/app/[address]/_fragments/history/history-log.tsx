@@ -21,13 +21,17 @@ export const HistoryLog: React.FC<HistoryLogProps> = ({ log }) => {
     <li className="flex flex-col w-full border p-4 gap-4 bg-secondary rounded relative">
       <Timestamp timestamp={log.timestamp} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="grid grid-cols-1 gap-2">
           <WithLabel label="Network">
             <NetworkBadge network={network} />
           </WithLabel>
-          <WithLabel label="Operation">{log.operation}</WithLabel>
-          <WithLabel label="Status">{log.status}</WithLabel>
+          <WithLabel label="Operation">
+            <OperationBadge operation={log.operation} />
+          </WithLabel>
+          <WithLabel label="Status">
+            <StatusBadge status={log.status} />
+          </WithLabel>
 
           <div className="inline-flex gap-2 items-center">
             <WithLabel label="From">
@@ -148,17 +152,51 @@ type NetworkBadgeProps = {
 
 const NetworkBadge: React.FC<NetworkBadgeProps> = ({ network }) => {
   return (
-    <Badge className="text-xs min-w-fit">
+    <Badge className={dataBadgeVariants()}>
       <Avatar
         src={network?.iconUrl}
         fallbackIcon="network"
         alt={network?.name || 'network icon'}
-        size="sm"
+        size="xs"
       />
       {network?.name || 'Unknown'}
     </Badge>
   );
 };
+
+type StatusBadgeProps = {
+  status: Domain.Account.HistoryLog['status'];
+};
+
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const [color, icon] = (
+    {
+      confirmed: ['success', 'check'],
+      failed: ['destructive', 'cross'],
+      pending: [undefined, 'spinner'],
+      ONRAMP_TRANSACTION_STATUS_SUCCESS: ['success', 'check'],
+      ONRAMP_TRANSACTION_STATUS_IN_PROGRESS: [undefined, 'spinner'],
+      ONRAMP_TRANSACTION_STATUS_FAILED: ['destructive', 'cross'],
+    } as const
+  )[status];
+
+  return (
+    <Badge color={color} className={dataBadgeVariants()}>
+      <Icon name={icon} />
+      {status}
+    </Badge>
+  );
+};
+
+type OperationBadgeProps = {
+  operation: string;
+};
+
+const OperationBadge: React.FC<OperationBadgeProps> = ({ operation }) => {
+  return <Badge className={dataBadgeVariants()}>{operation}</Badge>;
+};
+
+const dataBadgeVariants = cva('text-xs min-w-fit gap-1');
 
 type AddressLinkProps = {
   type: 'address' | 'tx';
